@@ -33,32 +33,26 @@ public class Orders {
     public Orders() {
     }
 
-    public void createOrder(){
-        //TODO
+    public void createOrder(Cart cart) throws NotAllowedException{
+        this.setCart(cart);
+        this.setStatus(OrderStatus.CREATED);
     }
 
     public void checkout() throws NotAllowedException, IllegalArgumentException{
-    	if (status == OrderStatus.CLOSED) throw new NotAllowedException("Status can't be closed");
-    	
-    	int cartQte = 0;
-    	
-    	
-    	if ( this.cart != null && cartQte == 0) {
-	    	for(CartItem cartItem : this.getCart().getCartItems()) {
-	    		cartQte += cartItem.getQuantity();
-	    	}
-    	
-            throw new IllegalArgumentException("Order contain 0 cart");
+    	if (this.status == OrderStatus.CLOSED){
+            throw new NotAllowedException("Order is CLOSED");
         }
-        
+        if ( this.cart != null && cart.getTotalQuantity()==0) {
+            throw new IllegalArgumentException("Order contain 0 quantity of item");
+        }
     	
     	Date date = new Date(System.currentTimeMillis());
         this.setIssueDate(date);
         this.setStatus(OrderStatus.PENDING);
     }
 
-    public void getDiscount(){
-        //TODO
+    public int getDiscount(){
+        return 0;
     }
 
     public void getOrderPrice(){

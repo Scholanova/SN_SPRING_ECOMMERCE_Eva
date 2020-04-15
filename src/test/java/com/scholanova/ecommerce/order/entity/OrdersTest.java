@@ -87,21 +87,42 @@ class OrdersTest {
     }
 
     @Test
-    @Disabled
-    public void createOrder_ShouldSetTheCartInTheOrder(){
-
+    public void createOrder_ShouldSetTheCartInTheOrder() throws NotAllowedException{
+    	//given
+        Orders order = new Orders();
+        Cart cart = new Cart();
+        
+        //when
+        order.createOrder(cart);
+        
+        //then
+        assertThat(order.getCart()).isEqualTo(cart);
     }
 
     @Test
-    @Disabled
-    public void createOrder_ShouldSetStatusToCreated(){
-
+    public void createOrder_ShouldSetStatusToCreated() throws NotAllowedException{
+    	//given
+        Orders order = new Orders();
+        Cart cart = new Cart();
+        
+        //when
+        order.createOrder(cart);
+        
+        //then
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.CREATED);
     }
 
     @Test
-    @Disabled
-    public void getDiscount_shouldReturnZEROIFCartTotalPriceIsLessThan100(){
+    public void getDiscount_shouldReturnZEROIFCartTotalPriceIsLessThan100() throws NotAllowedException{
+    	//given
+        Orders order = new Orders();
+        
+        Cart cart = new Cart();
 
+        order.setCart(cart);
+        
+        //then
+        assertThat(order.getDiscount()).isEqualTo(0);
     }
 
     @Test

@@ -70,6 +70,15 @@ public class Cart {
         }
         return totalPrice.setScale(2, RoundingMode.HALF_EVEN);
     }
+    
+    @JsonProperty("totalQuantity")
+    public int getTotalQuantity() {
+        int totlaQte = 0;
+        for (CartItem item: cartItems) {
+        	totlaQte += item.getQuantity();
+        }
+        return totlaQte;
+    }
 
     public Long getId() {return id;}
 
