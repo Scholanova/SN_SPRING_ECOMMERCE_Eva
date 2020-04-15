@@ -2,6 +2,8 @@ package com.scholanova.ecommerce.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scholanova.ecommerce.cart.entity.Cart;
+import com.scholanova.ecommerce.cart.entity.CartItem;
+import com.scholanova.ecommerce.order.exception.NotAllowedException;
 import com.sun.xml.bind.v2.TODO;
 
 import javax.persistence.*;
@@ -35,8 +37,24 @@ public class Orders {
         //TODO
     }
 
-    public void checkout(){
-        //TODO
+    public void checkout() throws NotAllowedException, IllegalArgumentException{
+    	if (status == OrderStatus.CLOSED) throw new NotAllowedException("Status can't be closed");
+    	
+    	int cartQte = 0;
+    	
+    	
+    	if ( this.cart != null && cartQte == 0) {
+	    	for(CartItem cartItem : this.getCart().getCartItems()) {
+	    		cartQte += cartItem.getQuantity();
+	    	}
+    	
+            throw new IllegalArgumentException("Order contain 0 cart");
+        }
+        
+    	
+    	Date date = new Date(System.currentTimeMillis());
+        this.setIssueDate(date);
+        this.setStatus(OrderStatus.PENDING);
     }
 
     public void getDiscount(){
@@ -76,9 +94,12 @@ public class Orders {
         this.status = status;
     }
 
-    public Cart getCart() {return cart;}
+    public Cart getCart() {
+    	return cart;
+    }
 
-    public void setCart(Cart cart) {
+    public void setCart(Cart cart)  throws NotAllowedException{
+    	if (status == OrderStatus.CLOSED) throw new NotAllowedException("Status can't be closed");
         this.cart = cart;
     }
 }
