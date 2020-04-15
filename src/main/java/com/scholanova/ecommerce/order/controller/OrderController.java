@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scholanova.ecommerce.order.entity.Orders;
 import com.scholanova.ecommerce.order.repository.OrderRepository;
+import com.scholanova.ecommerce.order.service.OrdersService;
 import com.scholanova.ecommerce.product.entity.Product;
 
 @RestController
@@ -25,9 +26,11 @@ import com.scholanova.ecommerce.product.entity.Product;
 public class OrderController {
 	
 	private OrderRepository repository;
+	private OrdersService service;
 	
-	public OrderController(@Autowired OrderRepository repository) {
+	public OrderController(OrderRepository repository, OrdersService order) {
 		this.repository = repository;
+		this.service = service;
 	}
 
 	@GetMapping
