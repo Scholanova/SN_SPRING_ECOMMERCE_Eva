@@ -2,11 +2,11 @@ package com.scholanova.ecommerce.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scholanova.ecommerce.cart.entity.Cart;
-import com.scholanova.ecommerce.cart.entity.CartItem;
 import com.scholanova.ecommerce.order.exception.NotAllowedException;
-import com.sun.xml.bind.v2.TODO;
 
 import javax.persistence.*;
+
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Entity(name="orders")
@@ -42,7 +42,7 @@ public class Orders {
     	if (this.status == OrderStatus.CLOSED){
             throw new NotAllowedException("Order is CLOSED");
         }
-        if ( this.cart != null && cart.getTotalQuantity()==0) {
+        if ( this.cart != null && cart.getTotalQuantity() == 0) {
             throw new IllegalArgumentException("Order contain 0 quantity of item");
         }
     	
@@ -51,16 +51,23 @@ public class Orders {
         this.setStatus(OrderStatus.PENDING);
     }
 
-    public int getDiscount(){
-        return 0;
+    public BigDecimal getDiscount(){
+    	if(BigDecimal.valueOf(100).compareTo(cart.getTotalPrice()) == 1) {
+    		return BigDecimal.valueOf(0);
+    	}
+    	return BigDecimal.valueOf(5);
     }
 
-    public void getOrderPrice(){
-        //TODO
+    public BigDecimal getOrderPrice(){
+        if(this.getDiscount().compareTo(BigDecimal.valueOf(0)) == 0){
+        	return cart.getTotalPrice();
+        }
+        return cart.getTotalPrice().divide(BigDecimal.valueOf(100)).multiply(this.getDiscount());
+        
     }
 
     public void close(){
-        //TODO
+        setStatus(OrderStatus.CLOSED);
     }
 
 

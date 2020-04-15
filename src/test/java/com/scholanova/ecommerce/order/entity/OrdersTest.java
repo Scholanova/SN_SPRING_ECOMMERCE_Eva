@@ -1,19 +1,16 @@
 package com.scholanova.ecommerce.order.entity;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.scholanova.ecommerce.cart.entity.Cart;
-import com.scholanova.ecommerce.cart.entity.CartItem;
 import com.scholanova.ecommerce.order.exception.NotAllowedException;
 import com.scholanova.ecommerce.product.entity.Product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 
 class OrdersTest {
@@ -26,6 +23,7 @@ class OrdersTest {
         
         //when
         order.checkout();
+        
         //then
         assertThat(order.getIssueDate()).isEqualTo(currentDate);
     }
@@ -119,28 +117,66 @@ class OrdersTest {
         
         Cart cart = new Cart();
 
+        //when
         order.setCart(cart);
         
         //then
-        assertThat(order.getDiscount()).isEqualTo(0);
+        assertThat(order.getDiscount()).isEqualTo(BigDecimal.valueOf(0));
     }
 
     @Test
-    @Disabled
-    public void getDiscount_shouldReturn5percentIfCartTotalPriceIsMoreOrEqual100(){
-
+    public void getDiscount_shouldReturn5percentIfCartTotalPriceIsMoreOrEqual100() throws NotAllowedException{
+    	//given
+        Orders order = new Orders();
+        
+        Cart cart = new Cart();
+        
+        Product product1 = Product.create("product1", "target", 10.0f, 0.2f, "EUR");
+        Product product2 = Product.create("product2", "target", 92.0f, 0.2f, "EUR");
+       
+        cart.addProduct(product1, 2);
+        cart.addProduct(product2, 1);
+        
+        //when
+        order.setCart(cart);
+        
+        //then
+        assertThat(order.getDiscount()).isEqualTo(BigDecimal.valueOf(5));
     }
 
     @Test
-    @Disabled
-    public void getOrderPrice_shouldReturnTotalPriceWithDiscount(){
-
+    public void getOrderPrice_shouldReturnTotalPriceWithDiscount() throws NotAllowedException{
+    	//given
+        Orders order = new Orders();
+        
+        Cart cart = new Cart();
+        
+        Product product1 = Product.create("product1", "target", 10.0f, 0.2f, "EUR");
+        Product product2 = Product.create("product2", "target", 92.0f, 0.2f, "EUR");
+       
+        //when
+        cart.addProduct(product1, 2);
+        cart.addProduct(product2, 1);
+        
+        order.setCart(cart);
+        
+        BigDecimal totalPrice = cart.getTotalPrice();
+        BigDecimal discountPrice = totalPrice.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(5));
+        
+        //then
+        assertThat(order.getOrderPrice()).isEqualTo(discountPrice);
     }
 
     @Test
-    @Disabled
     public void close_ShouldSetStatusToClose(){
-
+    	//given
+        Orders order = new Orders();
+        
+        //when
+        order.close();
+        
+        //then
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.CLOSED);
     }
 
 }
