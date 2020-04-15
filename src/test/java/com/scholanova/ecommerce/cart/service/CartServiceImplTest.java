@@ -27,7 +27,7 @@ class CartServiceImplTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     public void addProductToCart_ShouldAddTheProductToTheCart() {
         //given
         Cart cart = new Cart();
@@ -41,7 +41,7 @@ class CartServiceImplTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     public void addProductToCart_ShouldHandleExceptions() {
         //given
         Cart cart = new Cart();
@@ -54,7 +54,7 @@ class CartServiceImplTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     public void changeProductQuantity_ShouldChangeQuantity(){
         //given
         Cart cart = new Cart();
@@ -69,7 +69,7 @@ class CartServiceImplTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     public void changeProductQuantity_ShouldHandleExceptions(){
         //given
         Cart cart = new Cart();
